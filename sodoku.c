@@ -33,14 +33,14 @@ void * check_square(void * params);
 
 int main(void) 
 {
-    //Initialize variables
+    // Initialize variables
     int  i=0,n=0;
     
-    //Initialize the file pointer for reading
+    // Initialize the file pointer for reading
     FILE *file;
     file = fopen("puzzle.txt", "r");
     int board[9][9];
-    //Inputs data from file into 2d array
+    // Inputs data from file into 2d array
     for(i = 0; i < 9; i++) {
         for(n = 0; n < 9; n++) {
             char s[] = "0";
@@ -48,7 +48,7 @@ int main(void)
             board[i][n] = atoi(s);
         }
     }
-    //Prints the 2d array
+    // Prints the 2d array
     for (int i = 0; i < 9; i++){
         for (int j = 0; j < 9; j++){
             printf("%d  ",board[i][j]);
@@ -57,13 +57,13 @@ int main(void)
     };
     fclose(file);
     
-    //Create the parameters for checking the columns and rows
+    // Create the parameters for checking the columns and rows
     parameters * param0 = (parameters *) malloc(sizeof(parameters));
     param0->row = 0;
     param0->col = 0;
     param0->board = (int(*)[9])board;
     
-    //Create the 9 parameters for checking the 3x3 squares
+    // Create the 9 parameters for checking the 3x3 squares
     parameters * param1 = (parameters *) malloc(sizeof(parameters));
     param1->row = 0;
     param1->col = 0;
@@ -109,10 +109,10 @@ int main(void)
     param9->col = 6;
     param9->board = (int(*)[9])board;
     
-    //Create 11 threads for processing the checks
+    // Create 11 threads for processing the checks
     pthread_t thread_rows, thread_cols, thread1, thread2, thread3, thread4, thread5, thread6, thread7, thread8, thread9;
     
-    //Create void pointer variables for checking the return from each thread
+    // Create void pointer variables for checking the return from each thread
     void * board_rows;
     void * board_cols;
     void * square1;
@@ -125,7 +125,7 @@ int main(void)
     void * square8;
     void * square9;
     
-    //Initilize the 11 threads for processing the sodoku
+    // Initilize the 11 threads for processing the sodoku
     pthread_create(&thread_rows, NULL, check_rows, (void *) param0);
     pthread_create(&thread_cols, NULL, check_cols, (void *) param0);
     pthread_create(&thread1, NULL, check_square, (void *) param1);
@@ -138,7 +138,7 @@ int main(void)
     pthread_create(&thread8, NULL, check_square, (void *) param8);
     pthread_create(&thread9, NULL, check_square, (void *) param9);
 
-    //Wait for all threads to finish and join
+    // Wait for all threads to finish and join
     pthread_join(thread_rows, &board_rows);
     pthread_join(thread_cols, &board_cols);
     pthread_join(thread1, &square1);
@@ -151,7 +151,7 @@ int main(void)
     pthread_join(thread8, &square8);
     pthread_join(thread9, &square9);
     
-    //Cast each void variable to int & Check whether the Sudoku Puzzle was solved
+    // Cast each void variable to int & Check whether the Sudoku Puzzle was solved
     if ( (int) board_rows == 1 && (int) board_cols == 1 && (int) square1 == 1 &&
          (int) square2 == 1 && (int) square3 == 1 && (int) square4 == 1 && (int) square5 == 1 &&
          (int) square6 == 1 && (int) square7 == 1 && (int) square8 == 1 && (int) square9 == 1 ) 
@@ -165,11 +165,12 @@ int main(void)
 }
 
 /**
- * Checks each row if it contains all digits 1-9.
- * @param   void *      The parameters (pointer).
- * @return  void *      1 if all rows contain all digits from 1-9, 0 otherwise.
+ * This fucntion checks each row to see if it contains digits 1 to 9.
+ * Ignores all 0s on the board
+ * @param   (void *) parameters pointer
+ * @return  (void *) 1 if all rows contain all digits 1 to 9 and 0 otherwise.
  */
-void * walk_rows(void * params) {
+void * check_rows(void * params) {
     parameters * data = (parameters *) params;
     int initRow = data->row;
     int initCol = data->col;
@@ -190,11 +191,12 @@ void * walk_rows(void * params) {
 }
 
 /**
- * Checks each column if it contains all digits 1-9.
- * @param   void *      The parameters (pointer).
- * @return  void *      1 if all rows contain all digits from 1-9, 0 otherwise.
+ * This fucntion checks each coloumn to see if it contains digits 1 to 9.
+ * Ignores all 0s on the board
+ * @param   (void *) parameters pointer
+ * @return  (void *) 1 if all rows contain all digits 1 to 9 and 0 otherwise.
  */
-void * walk_cols(void * params) {
+void * check_cols(void * params) {
     parameters * data = (parameters *) params;
     int initRow = data->row;
     int initCol = data->col;
@@ -215,9 +217,10 @@ void * walk_cols(void * params) {
 }
 
 /**
- * Checks if a square of size 3x3 contains all numbers from 1-9.
- * @param   void *      The parameters (pointer).
- * @return  void *      1 if all rows contain all digits from 1-9, 0 otherwise.
+ * This fucntion checks each of 3x3 (9) sqaure to see if they contain digits 1 to 9.
+ * Ignores all 0s on the board
+ * @param   (void *) parameters pointer
+ * @return  (void *) 1 if all rows contain all digits 1 to 9 and 0 otherwise.
  */
 void * check_square(void * params) {
     parameters * data = (parameters *) params;
