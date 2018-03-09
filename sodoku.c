@@ -31,9 +31,6 @@ void * check_cols(void * params);
 // Prototype for 3x3 square function.
 void * check_square(void * params);
 
-/***************
- * ENTRY POINT
- **************/
 int main(void) 
 {
     //Initialize variables
